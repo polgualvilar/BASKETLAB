@@ -19,19 +19,6 @@ equipo = "Divieto Basket"
 # Posiciones disponibles
 posiciones = ["Interior", "Exterior"]
 
-# Plantilla del equipo
-"""jugadores = [
-    {"nombre": "Victor", "dorsal": 30, "posicion": "Exterior"},
-    {"nombre": "Pol", "dorsal": 15, "posicion": "Exterior"},
-    {"nombre": "Pedro", "dorsal": 7, "posicion": "Exterior"},
-    {"nombre": "Ivan", "dorsal": 5, "posicion": "Exterior"},
-    {"nombre": "Eloi", "dorsal": 22, "posicion": "Exterior"},
-    {"nombre": "Pelayo", "dorsal": 12, "posicion": "Exterior"},
-    {"nombre": "Migue", "dorsal": 9, "posicion": "Interior"},
-    {"nombre": "Kevin", "dorsal": 24, "posicion": "Interior"},
-    {"nombre": "Jeff", "dorsal": 11, "posicion": "Interior"}
-]
-"""
 
 # ==================================================
 # 3. FUNCIONES DE CONSULTA
@@ -129,6 +116,176 @@ def agregar_jugador(jugadores, posiciones):
     jugadores.append(jugador)
 
     print("Jugador añadido correctamente.")
+    pass
+
+# Modificar un jugador a la plantilla
+
+def modificiar_jugador(jugadores, posiciones):
+
+    # 1. BUSCAR JUGADOR
+
+    while True:
+        try:
+            dorsal = int(input("Introduce dorsal: "))
+
+            resultado = buscar_jugador(jugadores, dorsal)
+
+            if resultado is not None:
+                print("\n--- JUGADOR ENCONTRADO ---")
+                print(f"Nombre: {resultado['nombre']}")
+                print(f"Dorsal: {resultado['dorsal']}")
+                print(f"Posición: {resultado['posicion']}")
+                break
+            else:
+                print("Jugador no encontrado")   
+
+        except ValueError:
+                print("Error: debes introducir un número válido.")
+    
+    # 2. MENÚ DE MODIFICACIÓN
+
+    while True:
+        print("\n=== MODIFICAR JUGADOR ===")
+        print("1. Modificar nombre")
+        print("2. Modificar dorsal")
+        print("3. Modificar posición")
+        print("4. Modificar todos los datos")
+        print("5. Volver al menú principal")
+        print("")
+
+        try:
+            opcion_modificar = int(input("Selecciona una opción: "))
+
+            if opcion_modificar == 1:
+                while True:
+                    modificar_nombre = input("Introduce nombre: ").strip()
+
+                    if modificar_nombre == "":
+                        print("Introduce un nombre válido.")
+                    else:
+                        break
+
+                resultado["nombre"] = modificar_nombre
+                print("Nombre modificado correctamente.")
+            elif opcion_modificar == 2:
+                while True:
+                    try:
+                        modificar_dorsal = int(input("Introduce dorsal: "))
+                    
+                        jugador_existente = buscar_jugador(jugadores, modificar_dorsal)
+
+                        if jugador_existente is not None and jugador_existente is not resultado:
+                            print("Error: este dorsal pertenece a otro jugador")
+                        else:
+                            break
+                    except ValueError:
+                        print("Error: debes introducir un número válido.")
+
+                resultado["dorsal"] = modificar_dorsal
+                print("Dorsal modificado correctamente.")
+            elif opcion_modificar == 3:
+                while True:
+                    modificar_posicion = input("Introduce posición: ").strip().capitalize()
+                    
+                    if modificar_posicion not in posiciones:
+                        print ("Posición no valida")
+                    else:
+                        break
+                resultado["posicion"] = modificar_posicion
+                print("Posición modificada correctamente.")
+            elif opcion_modificar == 4:
+                while True:
+                    modificar_nombre = input("Introduce nombre: ").strip()
+                
+                    if modificar_nombre == "":
+                        print("Introduce un nombre válido.")
+                    else:
+                        break
+        
+                while True:
+                    try:
+                        modificar_dorsal = int(input("Introduce dorsal: "))
+                
+                        jugador_existente = buscar_jugador(jugadores, modificar_dorsal)
+
+                        if jugador_existente is not None and jugador_existente is not resultado:
+                            print("Error: este dorsal pertenece a otro jugador")
+                        else:
+                            break
+                
+                    except ValueError:
+                        print("Error: debes introducir un número válido.")
+                
+                while True:
+                    modificar_posicion = input("Introduce posición: ").strip().capitalize()
+                
+                    if modificar_posicion not in posiciones:
+                        print ("Posición no valida")
+                    else:
+                        break
+
+                resultado["nombre"] = modificar_nombre
+                resultado["dorsal"] = modificar_dorsal
+                resultado["posicion"] = modificar_posicion
+
+                print("Jugador modificado correctamente.")
+            elif opcion_modificar == 5:
+                break
+            else:
+                print("Opción no valida.")
+        except ValueError:
+            print("Error: debes introducir un número válido.")
+    pass
+    
+
+# 3. Eliminar un jugador de la plantilla
+
+def eliminar_jugador(jugadores):
+    while True:
+        try:
+            dorsal = int(input("Introduce dorsal: "))
+
+            resultado = buscar_jugador(jugadores, dorsal)
+
+            if resultado is not None:
+                print("\n--- JUGADOR ENCONTRADO ---")
+                print(f"Nombre: {resultado['nombre']}")
+                print(f"Dorsal: {resultado['dorsal']}")
+                print(f"Posición: {resultado['posicion']}")
+                break
+            else:
+                print("Jugador no encontrado")   
+
+        except ValueError:
+                print("Error: debes introducir un número válido.")
+    
+    while True:
+        print("Estas seguro de eliminar el jugador de la plantilla?")
+        print("1. Si")
+        print("2. No")
+        try:
+            opcion_eliminar = int(input("Selecciona una opción: "))
+    
+            if opcion_eliminar == 1:
+                jugadores.remove(resultado)
+                print("Jugador eliminado correctamente")
+                break
+
+            elif opcion_eliminar == 2:
+                print("Eliminacion cancelada.")
+                break
+
+            else:
+                print("Opción no valida")
+        except ValueError:
+            print("Error: debes introducir un número válido.")         
+
+                    
+
+
+
+
+
 
 
 # --------------------------------------------------
@@ -155,7 +312,9 @@ def menu_principal(equipo, jugadores, posiciones):
         print("1. Mostrar plantilla")
         print("2. Buscar jugador")
         print("3. Añadir jugador")
-        print("4. Salir")
+        print("4. Modificar jugador")
+        print("5. Eliminar jugador")
+        print("6. Salir")
         print("")
 
         try:
@@ -185,11 +344,22 @@ def menu_principal(equipo, jugadores, posiciones):
                 mostrar_plantillas(jugadores)
                 guardar_jugadores(jugadores)
 
-            # OPCIÓN 4 - SALIR
+            # OPCIÓN 4 - MODIFICAR JUGADOR
             elif opcion == 4:
+                modificiar_jugador(jugadores, posiciones)
+                guardar_jugadores(jugadores)
+
+            # OPCIÓN 5 - ELIMINAR JUGADOR    
+            elif opcion == 5:
+                eliminar_jugador(jugadores)
+                guardar_jugadores(jugadores)
+                
+
+            # OPCIÓN 6 - SALIR
+            elif opcion == 6:
                 print("Cerrando BasketLab...")
                 break
-
+                            
             # OPCIÓN NO VÁLIDA
             else:
                 print("Opción no válida")
