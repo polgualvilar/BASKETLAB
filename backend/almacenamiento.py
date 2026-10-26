@@ -1,3 +1,5 @@
+import json
+
 def cargar_jugadores():
     with open("data/jugadores.json", "r", encoding="utf-8") as archivo:
         datos = json.load(archivo)
