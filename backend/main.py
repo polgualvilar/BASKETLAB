@@ -9,6 +9,10 @@
 
 import json
 
+from validaciones import solicitar_nombre, solicitar_dorsal, solicitar_posicion
+
+from almacenamiento import cargar_jugadores, guardar_jugadores
+
 # ==================================================
 # 2. CONFIGURACIÓN Y DATOS DEL EQUIPO
 # ==================================================
@@ -58,15 +62,12 @@ def buscar_jugador(jugadores, dorsal):
 # 4. FUNCIONES DE ALMACENAMIENTO
 # ==================================================
 
-def cargar_jugadores():
-    with open("data/jugadores.json", "r", encoding="utf-8") as archivo:
-        datos = json.load(archivo)
 
-    return datos
 
-def guardar_jugadores(jugadores):
-    with open("data/jugadores.json", "w", encoding="utf-8") as archivo:
-        json.dump(jugadores, archivo, indent=4, ensure_ascii=False)
+# ==========================================
+# FUNCIONES AUXILIARES Y VALIDACIONES
+# ==========================================
+
 
 
 # ==================================================
@@ -78,34 +79,13 @@ def guardar_jugadores(jugadores):
 def agregar_jugador(jugadores, posiciones):
 
     # Validación del nombre
-    while True:
-        nombre = input("Introduce nombre: ").strip()
-
-        if nombre == "":
-            print("Introduce un nombre válido.")
-        else:
-            break
+    nombre = solicitar_nombre()
 
     # Validación del dorsal
-    while True:
-        try:
-            dorsal = int(input("Introduce dorsal: "))
+    dorsal = solicitar_dorsal(jugadores)
 
-            if buscar_jugador(jugadores, dorsal) is not None:
-                print("Error: este dorsal ya está ocupado")
-            else:
-                break
 
-        except ValueError:
-            print("Error: debes introducir un número válido.")
-
-    while True:
-        posicion = input("Introduce posición: ").strip().capitalize()
-
-        if posicion not in posiciones:
-            print ("Posición no valida")
-        else:
-            break
+    posicion = solicitar_posicion(posiciones)
 
     jugador = {
         "nombre": nombre,
@@ -116,7 +96,7 @@ def agregar_jugador(jugadores, posiciones):
     jugadores.append(jugador)
 
     print("Jugador añadido correctamente.")
-    pass
+
 
 # Modificar un jugador a la plantilla
 
@@ -157,72 +137,30 @@ def modificiar_jugador(jugadores, posiciones):
             opcion_modificar = int(input("Selecciona una opción: "))
 
             if opcion_modificar == 1:
-                while True:
-                    modificar_nombre = input("Introduce nombre: ").strip()
-
-                    if modificar_nombre == "":
-                        print("Introduce un nombre válido.")
-                    else:
-                        break
+                modificar_nombre = solicitar_nombre()
 
                 resultado["nombre"] = modificar_nombre
                 print("Nombre modificado correctamente.")
+                
             elif opcion_modificar == 2:
-                while True:
-                    try:
-                        modificar_dorsal = int(input("Introduce dorsal: "))
-                    
-                        jugador_existente = buscar_jugador(jugadores, modificar_dorsal)
-
-                        if jugador_existente is not None and jugador_existente is not resultado:
-                            print("Error: este dorsal pertenece a otro jugador")
-                        else:
-                            break
-                    except ValueError:
-                        print("Error: debes introducir un número válido.")
+                modificar_dorsal = solicitar_dorsal(jugadores, resultado)
 
                 resultado["dorsal"] = modificar_dorsal
                 print("Dorsal modificado correctamente.")
+                
             elif opcion_modificar == 3:
-                while True:
-                    modificar_posicion = input("Introduce posición: ").strip().capitalize()
-                    
-                    if modificar_posicion not in posiciones:
-                        print ("Posición no valida")
-                    else:
-                        break
+                modificar_posicion = solicitar_posicion(posiciones)
+
                 resultado["posicion"] = modificar_posicion
                 print("Posición modificada correctamente.")
-            elif opcion_modificar == 4:
-                while True:
-                    modificar_nombre = input("Introduce nombre: ").strip()
-                
-                    if modificar_nombre == "":
-                        print("Introduce un nombre válido.")
-                    else:
-                        break
-        
-                while True:
-                    try:
-                        modificar_dorsal = int(input("Introduce dorsal: "))
-                
-                        jugador_existente = buscar_jugador(jugadores, modificar_dorsal)
 
-                        if jugador_existente is not None and jugador_existente is not resultado:
-                            print("Error: este dorsal pertenece a otro jugador")
-                        else:
-                            break
+            elif opcion_modificar == 4:
+
+                modificar_nombre = solicitar_nombre()
+        
+                modificar_dorsal = solicitar_dorsal(jugadores, resultado)
                 
-                    except ValueError:
-                        print("Error: debes introducir un número válido.")
-                
-                while True:
-                    modificar_posicion = input("Introduce posición: ").strip().capitalize()
-                
-                    if modificar_posicion not in posiciones:
-                        print ("Posición no valida")
-                    else:
-                        break
+                modificar_posicion = solicitar_posicion(posiciones)
 
                 resultado["nombre"] = modificar_nombre
                 resultado["dorsal"] = modificar_dorsal
