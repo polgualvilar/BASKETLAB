@@ -1,0 +1,21 @@
+# ==================================
+# BASKETLAB - GITIGNORE
+# ==================================
+
+# Datos locales
+data/
+
+# Entornos virtuales de Python
+.venv/
+venv/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Archivos de configuración privados
+.env
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db

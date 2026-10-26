@@ -3,14 +3,24 @@
 # BASKETLAB - GESTIÓN DE EQUIPOS DE BALONCESTO
 # ==================================================
 
+# ==================================================
+# 1. IMPORTACIONES
+# ==================================================
+
+import json
 
 # ==================================================
-# 1. CONFIGURACIÓN Y DATOS DEL EQUIPO
+# 2. CONFIGURACIÓN Y DATOS DEL EQUIPO
 # ==================================================
 
+# Información del equipo
 equipo = "Divieto Basket"
 
-jugadores = [
+# Posiciones disponibles
+posiciones = ["Interior", "Exterior"]
+
+# Plantilla del equipo
+"""jugadores = [
     {"nombre": "Victor", "dorsal": 30, "posicion": "Exterior"},
     {"nombre": "Pol", "dorsal": 15, "posicion": "Exterior"},
     {"nombre": "Pedro", "dorsal": 7, "posicion": "Exterior"},
@@ -21,10 +31,10 @@ jugadores = [
     {"nombre": "Kevin", "dorsal": 24, "posicion": "Interior"},
     {"nombre": "Jeff", "dorsal": 11, "posicion": "Interior"}
 ]
-
+"""
 
 # ==================================================
-# 2. FUNCIONES DE CONSULTA
+# 3. FUNCIONES DE CONSULTA
 # ==================================================
 
 # Mostrar información general del equipo
@@ -57,18 +67,39 @@ def buscar_jugador(jugadores, dorsal):
 
     return None
 
+# ==================================================
+# 4. FUNCIONES DE ALMACENAMIENTO
+# ==================================================
+
+def cargar_jugadores():
+    with open("data/jugadores.json", "r", encoding="utf-8") as archivo:
+        datos = json.load(archivo)
+
+    return datos
+
+def guardar_jugadores(jugadores):
+    with open("data/jugadores.json", "w", encoding="utf-8") as archivo:
+        json.dump(jugadores, archivo, indent=4, ensure_ascii=False)
+
 
 # ==================================================
-# 3. FUNCIONES DE GESTIÓN
+# 5. FUNCIONES DE GESTIÓN
 # ==================================================
 
 # Añadir un jugador a la plantilla
-def agregar_jugador(jugadores):
 
+def agregar_jugador(jugadores, posiciones):
+
+    # Validación del nombre
     while True:
-        try:
-            nombre = input("Introduce nombre: ").strip()
+        nombre = input("Introduce nombre: ").strip()
 
+        if nombre == "":
+            print("Introduce un nombre válido.")
+        else:
+            break
+
+    # Validación del dorsal
     while True:
         try:
             dorsal = int(input("Introduce dorsal: "))
@@ -77,10 +108,17 @@ def agregar_jugador(jugadores):
                 print("Error: este dorsal ya está ocupado")
             else:
                 break
+
         except ValueError:
             print("Error: debes introducir un número válido.")
 
-    posicion = input("Introduce posicion: ")
+    while True:
+        posicion = input("Introduce posición: ").strip().capitalize()
+
+        if posicion not in posiciones:
+            print ("Posición no valida")
+        else:
+            break
 
     jugador = {
         "nombre": nombre,
@@ -105,10 +143,10 @@ def agregar_jugador(jugadores):
 
 
 # ==================================================
-# 4. MENÚ PRINCIPAL
+# 6. MENÚ PRINCIPAL
 # ==================================================
 
-def menu_principal(equipo, jugadores):
+def menu_principal(equipo, jugadores, posiciones):
 
     mostrar_bienvenida(equipo)
 
@@ -143,8 +181,9 @@ def menu_principal(equipo, jugadores):
 
             # OPCIÓN 3 - AÑADIR JUGADOR
             elif opcion == 3:
-                agregar_jugador(jugadores)
+                agregar_jugador(jugadores, posiciones)
                 mostrar_plantillas(jugadores)
+                guardar_jugadores(jugadores)
 
             # OPCIÓN 4 - SALIR
             elif opcion == 4:
@@ -160,7 +199,10 @@ def menu_principal(equipo, jugadores):
 
 
 # ==================================================
-# 5. INICIO DEL PROGRAMA
+# 7. INICIO DEL PROGRAMA
 # ==================================================
 
-menu_principal(equipo, jugadores)
+jugadores = cargar_jugadores()
+
+menu_principal(equipo, jugadores, posiciones)
+
