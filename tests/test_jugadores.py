@@ -153,6 +153,11 @@ class TestJugadores(unittest.TestCase):
 
         self.assertEqual(len(self.jugadores), 1)
         self.assertEqual(eliminado["nombre"], "Pol")
+
+    def test_dorsal_texto(self):
+
+        with self.assertRaises(ValueError):
+            crear_jugador(self.jugadores, "Marc", "diez", "Interior")
                        
 
 if __name__ == "__main__":

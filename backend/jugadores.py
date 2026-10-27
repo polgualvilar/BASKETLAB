@@ -69,14 +69,14 @@ def modificar_jugador(jugadores, posiciones):
 
             if opcion_modificar == 1:
                 modificar_nombre = solicitar_nombre()
-                actualizar_jugador(resultado, nombre=modificar_nombre)
+                actualizar_jugador(resultado, jugadores, nombre=modificar_nombre)
             elif opcion_modificar == 2:
                 modificar_dorsal = solicitar_dorsal(jugadores, resultado)
-                actualizar_jugador(resultado, dorsal=modificar_dorsal)
+                actualizar_jugador(resultado, jugadores, dorsal=modificar_dorsal)
 
             elif opcion_modificar == 3:
                 modificar_posicion = solicitar_posicion(posiciones)
-                actualizar_jugador(resultado, posicion=modificar_posicion)
+                actualizar_jugador(resultado, jugadores, posicion=modificar_posicion)
 
             elif opcion_modificar == 4:
 
@@ -86,7 +86,7 @@ def modificar_jugador(jugadores, posiciones):
                 
                 modificar_posicion = solicitar_posicion(posiciones)
 
-                actualizar_jugador(resultado, nombre=modificar_nombre, dorsal=modificar_dorsal, posicion=modificar_posicion)
+                actualizar_jugador(resultado, jugadores, nombre=modificar_nombre, dorsal=modificar_dorsal, posicion=modificar_posicion)
 
                 print("Jugador modificado correctamente.")
             elif opcion_modificar == 5:

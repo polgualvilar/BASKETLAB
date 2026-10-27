@@ -13,14 +13,11 @@ def solicitar_dorsal(jugadores, jugador_actual=None):
     while True:
         try:
             dorsal = int(input("Introduce dorsal: "))
-            jugador_existente = buscar_jugador(jugadores, dorsal)
 
-            if jugador_existente is not None and jugador_existente is not jugador_actual:
-                print("Error: este dorsal pertenece a otro jugador")
-            else:
-                return dorsal
-        except ValueError:
-            print("Error: debes introducir un número válido.")
+            return comprobar_dorsal(dorsal, jugadores, jugador_actual)
+
+        except ValueError as error:
+            print(f"Error: {error}")
 
 def solicitar_posicion(posiciones):
     while True:
