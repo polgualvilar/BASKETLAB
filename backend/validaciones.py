@@ -1,5 +1,6 @@
 from consultas import buscar_jugador
 
+
 def solicitar_nombre():
     while True:
         nombre = input("Introduce nombre: ").strip()
@@ -35,7 +36,8 @@ def comprobar_nombre(nombre):
     return nombre.strip()
 
 def comprobar_dorsal(dorsal, jugadores, jugador_actual=None):
-    if not isinstance(dorsal, int):
+
+    if not isinstance(dorsal, int) or isinstance(dorsal, bool):
         raise ValueError("El dorsal debe ser un número entero.")
 
     if dorsal < 0:
@@ -48,12 +50,33 @@ def comprobar_dorsal(dorsal, jugadores, jugador_actual=None):
     return dorsal
 
 def comprobar_posicion(posicion, posiciones):
-    posicion = posicion.strip().capitalize()
-    
+
     if not isinstance(posicion, str):
-        raise ValueError("La posición debe ser una cadena de texto.")
+            raise ValueError("La posición debe ser una cadena de texto.")
+
+    posicion = posicion.strip().capitalize()
     
     if posicion not in posiciones:
         raise ValueError("Posición no válida.")
     
     return posicion
+
+def comprobar_id_partido(id_partido):
+
+    if not isinstance(id_partido, int) or isinstance(id_partido, bool):
+            raise ValueError("El id debe ser un número entero.")
+    
+    if id_partido < 0:
+        raise ValueError("El id no puede ser negativo.")
+        
+    return id_partido
+
+def comprobar_rival(rival):
+    if not isinstance(rival, str):
+        raise ValueError("El rival debe ser texto")
+    
+    if rival.strip() == "":
+            raise ValueError("El rival no puede estar vacío.")
+        
+    return rival.strip()
+

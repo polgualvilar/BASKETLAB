@@ -1,11 +1,11 @@
-
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 
-from jugadores import crear_jugador, actualizar_jugador, borrar_jugador
+from jugadores import crear_jugador, actualizar_jugador, borrar_jugador, agregar_jugador, modificar_jugador, eliminar_jugador
 
 
 class TestJugadores(unittest.TestCase):
@@ -158,7 +158,106 @@ class TestJugadores(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             crear_jugador(self.jugadores, "Marc", "diez", "Interior")
-                       
+
+    def test_agregar_jugador_consola(self):
+
+        with patch("builtins.input", side_effect=["Marc", "10", "Interior"]):
+            agregar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(len(self.jugadores), 3)
+        self.assertEqual(self.jugadores[2]["nombre"], "Marc")
+        self.assertEqual(self.jugadores[2]["dorsal"], 10)
+        self.assertEqual(self.jugadores[2]["posicion"], "Interior")
+
+    def test_agregar_jugador_consola_dorsal_invalido(self):
+
+        with patch("builtins.input", side_effect=["Marc", "diez", 10, "Interior"]):
+                agregar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(len(self.jugadores), 3)
+        self.assertEqual(self.jugadores[2]["dorsal"], 10)
+
+    def test_agregar_jugador_posicion_invalida(self):
+
+        with patch("builtins.input", side_effect=["Marc", "10", "Portero", "Interior"]):
+                agregar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(len(self.jugadores), 3)
+        self.assertEqual(self.jugadores[2]["posicion"], "Interior")
+
+    def test_modificar_nombre_consola(self):
+
+        with patch("builtins.input", side_effect=["15", "1", "Marc", "5"]):
+            modificar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(self.jugadores[0]["nombre"], "Marc")
+        self.assertEqual(self.jugadores[0]["dorsal"], 15)
+        self.assertEqual(self.jugadores[0]["posicion"], "Exterior")
+
+    def test_modificar_dorsal_consola(self):
+        
+        with patch("builtins.input", side_effect=["15", "2", "23", "5"]):
+            modificar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(self.jugadores[0]["nombre"], "Pol")
+        self.assertEqual(self.jugadores[0]["dorsal"], 23)
+        self.assertEqual(self.jugadores[0]["posicion"], "Exterior")
+
+    def test_modificar_posicion_consola(self):
+        
+        with patch("builtins.input", side_effect=["15", "3", "Interior", "5"]):
+            modificar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(self.jugadores[0]["nombre"], "Pol")
+        self.assertEqual(self.jugadores[0]["dorsal"], 15)
+        self.assertEqual(self.jugadores[0]["posicion"], "Interior")
+
+    def test_modificar_todos_datos_consola(self):
+        
+        with patch("builtins.input", side_effect=["15", "4", "Marc", "23", "Interior", "5"]):
+            modificar_jugador(self.jugadores, ["Interior", "Exterior"])
+
+        self.assertEqual(self.jugadores[0]["nombre"], "Marc")
+        self.assertEqual(self.jugadores[0]["dorsal"], 23)
+        self.assertEqual(self.jugadores[0]["posicion"], "Interior")
+        self.assertEqual(len(self.jugadores), 2)
+
+    def test_eliminar_jugador_consola(self):
+
+        with patch("builtins.input", side_effect=["15", "1"]):
+            eliminar_jugador(self.jugadores)
+
+        self.assertEqual(len(self.jugadores), 1)
+        self.assertEqual(self.jugadores[0]["nombre"], "Victor")
+
+    def test_cancelar_eliminacion_consola(self):
+
+        with patch("builtins.input", side_effect=["15", "2"]):
+            eliminar_jugador(self.jugadores)
+
+        self.assertEqual(len(self.jugadores), 2)
+        self.assertEqual(self.jugadores[0]["nombre"], "Pol")
+        self.assertEqual(self.jugadores[1]["nombre"], "Victor")
+
+    def test_eliminar_jugador_no_encontrado(self):
+
+        with patch("builtins.input", side_effect=["99", "15", "1"]):
+            eliminar_jugador(self.jugadores)
+
+        self.assertEqual(len(self.jugadores), 1)
+        self.assertEqual(self.jugadores[0]["nombre"], "Victor")
+    
+    def test_opcion_eliminacion_invalida(self):
+
+        with patch("builtins.input", side_effect=["15", "3", "2"]):
+            eliminar_jugador(self.jugadores)
+
+        with patch("builtins.input", side_effect=["15", "3", "1"]):
+            eliminar_jugador(self.jugadores)
+
+        self.assertEqual(len(self.jugadores), 1)
+        self.assertEqual(self.jugadores[0]["nombre"], "Victor")
+
 
 if __name__ == "__main__":
     unittest.main()
