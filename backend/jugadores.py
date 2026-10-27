@@ -120,7 +120,7 @@ def actualizar_jugador(jugador, jugadores, nombre=None, dorsal=None, posicion=No
 
 def borrar_jugador(jugadores, jugador):
     jugadores.remove(jugador)
-    return jugadores
+    return jugador
     
 
 def eliminar_jugador(jugadores):
