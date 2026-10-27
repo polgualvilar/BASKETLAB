@@ -97,14 +97,23 @@ def modificar_jugador(jugadores, posiciones):
             print("Error: debes introducir un número válido.")
 
 def actualizar_jugador(jugador, jugadores, nombre=None, dorsal=None, posicion=None):
+
     if nombre is not None:
         nombre = comprobar_nombre(nombre)
-        jugador["nombre"] = nombre
+
     if dorsal is not None:
-        dorsal = comprobar_dorsal(dorsal, jugadores, jugador_actual=None)
-        jugador["dorsal"] = dorsal
+        dorsal = comprobar_dorsal(dorsal, jugadores, jugador)
+
     if posicion is not None:
         posicion = comprobar_posicion(posicion, posiciones)
+
+    if nombre is not None:
+        jugador["nombre"] = nombre
+
+    if dorsal is not None:
+        jugador["dorsal"] = dorsal
+
+    if posicion is not None:
         jugador["posicion"] = posicion
 
     return jugador
