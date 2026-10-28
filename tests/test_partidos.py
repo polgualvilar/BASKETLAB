@@ -2,10 +2,11 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 
-from partidos import crear_partido, registrar_partido
+from partidos import crear_partido, registrar_partido, agregar_partido
 
 
 class TestPartidos(unittest.TestCase):
@@ -183,8 +184,50 @@ class TestPartidos(unittest.TestCase):
     # ==========================================
 
     # Próximas pruebas:
-    # test_crear_partido_puntos_validos()
-    # test_crear_partido_puntos_invalidos()
+    def test_crear_partido_puntos_validos(self):
+        
+        casos = [
+            (0, 0),
+            (65, 58),
+            (100, 99)
+        ]
+
+        for favor, contra in casos:
+            with self.subTest(favor=favor, contra=contra):
+                partido = crear_partido(
+                    id=1,
+                    rival="Basket Terrassa",
+                    fecha="28/10/2026",
+                    lugar="Local",
+                    puntos_favor=favor,
+                    puntos_contra=contra
+                )
+
+                self.assertEqual(partido["puntos_favor"], favor)
+                self.assertEqual(partido["puntos_contra"], contra)
+
+    def test_crear_partido_puntos_invalidos(self):
+
+        casos_invalidos = [
+            (-1, 50),
+            (60, -1),
+            ("80", 70),
+            (80, True),
+            (3.5, 60),
+            (60, None)
+        ]
+
+        for favor, contra in casos_invalidos:
+            with self.subTest(favor=favor, contra=contra):
+                with self.assertRaises(ValueError):
+                    crear_partido(
+                        id=1,
+                        rival="Basket Terrassa",
+                        fecha="15/01/2026",
+                        lugar="Local",
+                        puntos_favor=favor,
+                        puntos_contra=contra
+                    )
 
     # ==========================================
     # 7. REGISTRO DE PARTIDOS
@@ -209,19 +252,78 @@ class TestPartidos(unittest.TestCase):
         self.assertEqual(registrado, partido)
 
     # ==========================================
-    # 8. CONSULTA DE PARTIDOS
+    # 8. AGREGAR PARTIDOS
+    # ==========================================
+    def test_agregar_partido(self):
+
+        partidos = []
+
+        entradas = [
+            "1",
+            "Basket Terrassa",
+            "28/10/2026",
+            "Local",
+            "65",
+            "58"
+        ]
+
+        with patch("builtins.input", side_effect=entradas):
+            agregar_partido(partidos)
+
+        self.assertEqual(len(partidos), 1)
+        self.assertEqual(partidos[0]["id"], 1)
+        self.assertEqual(partidos[0]["rival"], "Basket Terrassa")
+        self.assertEqual(partidos[0]["fecha"], "28/10/2026")
+        self.assertEqual(partidos[0]["lugar"], "Local")
+        self.assertEqual(partidos[0]["puntos_favor"], 65)
+        self.assertEqual(partidos[0]["puntos_contra"], 58)
+
+    
+    def test_agregar_partido_id_duplicado(self):
+
+        partidos = [
+            {
+                "id": 1,
+                "rival": "Basket Terrassa",
+                "fecha": "28/10/2026",
+                "lugar": "Local",
+                "puntos_favor": 65,
+                "puntos_contra": 58
+            }
+        ]
+
+        entradas = [
+            "1",
+            "Sabadell Basket",
+            "29/10/2026",
+            "Visitante",
+            "70",
+            "60"
+        ]
+
+        with patch("builtins.input", side_effect=entradas):
+            agregar_partido(partidos)
+
+        self.assertEqual(len(partidos), 1)
+        self.assertEqual(partidos[0]["id"], 1)
+        self.assertEqual(partidos[0]["rival"], "Basket Terrassa")
+        self.assertEqual(partidos[0]["puntos_favor"], 65)
+        self.assertEqual(partidos[0]["puntos_contra"], 58)
+
+    # ==========================================
+    # 9. CONSULTA DE PARTIDOS
     # ==========================================
 
     # Aquí añadiremos futuras pruebas de búsqueda.
 
     # ==========================================
-    # 9. MODIFICACIÓN DE PARTIDOS
+    # 10. MODIFICACIÓN DE PARTIDOS
     # ==========================================
 
     # Aquí añadiremos futuras pruebas de modificación.
 
     # ==========================================
-    # 10. ELIMINACIÓN DE PARTIDOS
+    # 12. ELIMINACIÓN DE PARTIDOS
     # ==========================================
 
     # Aquí añadiremos futuras pruebas de eliminación.

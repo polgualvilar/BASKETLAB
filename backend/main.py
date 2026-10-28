@@ -1,37 +1,31 @@
-
-# ==================================================
-# BASKETLAB - GESTIÓN DE EQUIPOS DE BALONCESTO
-# ==================================================
-
-# ==================================================
-# 1. IMPORTACIONES
-# ==================================================
-
-from almacenamiento import cargar_jugadores, guardar_jugadores
+from almacenamiento import cargar_jugadores, guardar_jugadores, cargar_partidos, guardar_partidos
 from consultas import buscar_jugador
 from jugadores import agregar_jugador, modificar_jugador, eliminar_jugador
 from config import posiciones
-# ==================================================
-# 2. CONFIGURACIÓN Y DATOS DEL EQUIPO
-# ==================================================
+from partidos import agregar_partido
 
-# Información del equipo
+
+# ==========================================
+# 1. CONFIGURACIÓN
+# ==========================================
+
 equipo = "Divieto Basket"
 
 
-# ==================================================
-# 3. FUNCIONES DE CONSULTA
-# ==================================================
+# ==========================================
+# 2. FUNCIONES DE CONSULTA
+# ==========================================
 
-# Mostrar información general del equipo
 def mostrar_bienvenida(equipo):
-    print("Bienvenido a BasketLab", equipo)
+    print(f"\nBienvenido a BasketLab - {equipo}")
 
 
-
-# Mostrar todos los jugadores del equipo
-def mostrar_plantillas(jugadores):
+def mostrar_plantilla(jugadores):
     print("\n--- PLANTILLA ---")
+
+    if not jugadores:
+        print("No hay jugadores registrados.")
+        return
 
     for jugador in jugadores:
         print(f"Nombre: {jugador['nombre']}")
@@ -40,84 +34,51 @@ def mostrar_plantillas(jugadores):
         print("----------------")
 
 
-# Contar el número de jugadores
+def mostrar_partidos(partidos):
+    print("\n--- PARTIDOS ---")
+
+    if not partidos:
+        print("No hay partidos registrados.")
+        return
+
+    for partido in partidos:
+        print(f"ID: {partido['id']}")
+        print(f"Rival: {partido['rival']}")
+        print(f"Fecha: {partido['fecha']}")
+        print(f"Lugar: {partido['lugar']}")
+        print(
+            f"Resultado: {partido['puntos_favor']} - "
+            f"{partido['puntos_contra']}"
+        )
+        print("----------------")
+
+
 def contar_jugadores(jugadores):
     return len(jugadores)
 
 
-# ==================================================
-# 4. FUNCIONES DE ALMACENAMIENTO
-# ==================================================
-
-
-
 # ==========================================
-# FUNCIONES AUXILIARES Y VALIDACIONES
+# 3. MENÚ DE PLANTILLA
 # ==========================================
 
-
-
-# ==================================================
-# 5. FUNCIONES DE GESTIÓN
-# ==================================================
-
-
-
-
-
-    
-
-# 3. Eliminar un jugador de la plantilla
-
-         
-
-                    
-
-
-
-
-
-
-
-# --------------------------------------------------
-# FUTURAS FUNCIONES DE GESTIÓN
-# --------------------------------------------------
-
-# Aquí añadiremos:
-# - Validar dorsales duplicados
-# - Modificar datos de un jugador
-# - Eliminar jugadores
-# - Guardar y cargar datos
-
-
-# ==================================================
-# 6. MENÚ PRINCIPAL
-# ==================================================
-
-def menu_principal(equipo, jugadores, posiciones):
-
-    mostrar_bienvenida(equipo)
+def menu_plantilla(jugadores, posiciones):
 
     while True:
-        print("\n=== BASKETLAB ===")
+        print("\n=== GESTIÓN DE PLANTILLA ===")
         print("1. Mostrar plantilla")
         print("2. Buscar jugador")
         print("3. Añadir jugador")
         print("4. Modificar jugador")
         print("5. Eliminar jugador")
-        print("6. Salir")
-        print("")
+        print("6. Volver al menú principal")
 
         try:
-            opcion = int(input("Selecciona una opción: "))
+            opcion = int(input("\nSelecciona una opción: "))
 
-            # OPCIÓN 1 - MOSTRAR PLANTILLA
             if opcion == 1:
-                mostrar_plantillas(jugadores)
+                mostrar_plantilla(jugadores)
 
-            # OPCIÓN 2 - BUSCAR JUGADOR
             elif opcion == 2:
-
                 dorsal = int(input("Introduce dorsal: "))
                 resultado = buscar_jugador(jugadores, dorsal)
 
@@ -127,43 +88,103 @@ def menu_principal(equipo, jugadores, posiciones):
                     print(f"Dorsal: {resultado['dorsal']}")
                     print(f"Posición: {resultado['posicion']}")
                 else:
-                    print("Jugador no encontrado")
+                    print("Jugador no encontrado.")
 
-            # OPCIÓN 3 - AÑADIR JUGADOR
             elif opcion == 3:
                 agregar_jugador(jugadores, posiciones)
-                mostrar_plantillas(jugadores)
                 guardar_jugadores(jugadores)
+                mostrar_plantilla(jugadores)
 
-            # OPCIÓN 4 - MODIFICAR JUGADOR
             elif opcion == 4:
                 modificar_jugador(jugadores, posiciones)
                 guardar_jugadores(jugadores)
 
-            # OPCIÓN 5 - ELIMINAR JUGADOR    
             elif opcion == 5:
                 eliminar_jugador(jugadores)
                 guardar_jugadores(jugadores)
-                
 
-            # OPCIÓN 6 - SALIR
             elif opcion == 6:
-                print("Cerrando BasketLab...")
                 break
-                            
-            # OPCIÓN NO VÁLIDA
+
             else:
-                print("Opción no válida")
+                print("Opción no válida.")
 
         except ValueError:
             print("Error: debes introducir un número válido.")
 
 
-# ==================================================
-# 7. INICIO DEL PROGRAMA
-# ==================================================
+# ==========================================
+# 4. MENÚ DE PARTIDOS
+# ==========================================
 
-jugadores = cargar_jugadores()
+def menu_partidos(partidos):
 
-menu_principal(equipo, jugadores, posiciones)
+    while True:
+        print("\n=== GESTIÓN DE PARTIDOS ===")
+        print("1. Mostrar partidos")
+        print("2. Registrar partido")
+        print("3. Volver al menú principal")
 
+        try:
+            opcion = int(input("\nSelecciona una opción: "))
+
+            if opcion == 1:
+                mostrar_partidos(partidos)
+
+            elif opcion ==2:
+                agregar_partido(partidos)
+                guardar_partidos(partidos)
+
+            elif opcion == 3:
+                break
+
+            else:
+                print("Opción no válida.")
+
+        except ValueError:
+            print("Error: debes introducir un número válido.")
+
+
+# ==========================================
+# 5. MENÚ PRINCIPAL
+# ==========================================
+
+def menu_principal(equipo, jugadores, posiciones, partidos):
+
+    mostrar_bienvenida(equipo)
+
+    while True:
+        print("\n=== BASKETLAB ===")
+        print("1. Plantilla")
+        print("2. Partidos")
+        print("3. Salir")
+
+        try:
+            opcion = int(input("\nSelecciona una opción: "))
+
+            if opcion == 1:
+                menu_plantilla(jugadores, posiciones)
+
+            elif opcion == 2:
+                menu_partidos(partidos)
+
+            elif opcion == 3:
+                print("Cerrando BasketLab...")
+                break
+
+            else:
+                print("Opción no válida.")
+
+        except ValueError:
+            print("Error: debes introducir un número válido.")
+
+
+# ==========================================
+# 6. INICIO DEL PROGRAMA
+# ==========================================
+
+if __name__ == "__main__":
+    jugadores = cargar_jugadores()
+    partidos = cargar_partidos()
+
+    menu_principal(equipo, jugadores, posiciones, partidos)
