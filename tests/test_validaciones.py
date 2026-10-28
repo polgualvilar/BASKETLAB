@@ -4,8 +4,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 
-from validaciones import comprobar_nombre, comprobar_dorsal, comprobar_posicion, comprobar_rival, comprobar_id_partido
-
+from validaciones import (
+    comprobar_nombre,
+    comprobar_dorsal,
+    comprobar_posicion,
+    comprobar_rival,
+    comprobar_id_partido,
+    comprobar_fecha,
+    comprobar_lugar,
+    comprobar_puntos)
+from config import lugares
 class TestValidaciones(unittest.TestCase):
 
     def setUp(self):
@@ -108,3 +116,75 @@ class TestValidaciones(unittest.TestCase):
             with self.subTest(id=id):
                 with self.assertRaises(ValueError):
                     comprobar_id_partido(id)
+
+    def test_fechas_validas(self):
+        
+        fechas_validas = [
+            "28/10/2026",
+            "01/01/2026",
+            "15/01/2026",
+            "10/03/2026"
+        ]
+
+        for fecha in fechas_validas:
+            with self.subTest(fecha=fecha):
+                resultado = comprobar_fecha(fecha)
+                self.assertEqual(resultado, fecha)
+
+    def test_fechas_invalidas(self):
+
+        fechas_invalidas = [
+            "31/02/2026",
+            "32/10/2026",
+            "28/13/2026",
+            "2026-10-28",
+            "5/1/2026",
+            "",
+            28102026,
+            None
+        ]
+
+        for fecha in fechas_invalidas:
+            with self.subTest(fecha=fecha):
+                with self.assertRaises(ValueError):
+                    comprobar_fecha(fecha)
+
+    def test_lugares_validos(self):
+
+        casos = [
+            ("Local", "Local"),
+            ("local", "Local"),
+            ("LOCAL", "Local"),
+            (" visitante ", "Visitante"),
+            ("VISITANTE", "Visitante")
+        ]
+
+        for entrada, esperado in casos:
+            with self.subTest(lugar=entrada):
+                resultado = comprobar_lugar(entrada, lugares)
+                self.assertEqual(resultado, esperado)
+
+    def test_lugares_invalidos(self):
+        lugares_invalidos = ["", "   ", "Neutral", "Casa", 123, None, True]
+
+        for lugar in lugares_invalidos:
+            with self.subTest(lugar=lugar):
+                with self.assertRaises(ValueError):
+                    comprobar_lugar(lugar, lugares)
+
+    def test_puntos_validos(self):
+        puntos_validos = [0, 1, 99]
+
+        for puntos in puntos_validos:
+            with self.subTest(puntos=puntos):
+                resultado = comprobar_puntos(puntos)
+                self.assertEqual(resultado, puntos)
+
+    def test_puntos_invalidos(self):
+
+        puntos_invalidos = [-1, "hola", True, 3.5, None]
+                
+        for puntos in puntos_invalidos:
+            with self.subTest(puntos=puntos):
+                with self.assertRaises(ValueError):
+                    comprobar_puntos(puntos)

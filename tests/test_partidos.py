@@ -18,16 +18,16 @@ class TestPartidos(unittest.TestCase):
         partido = crear_partido(
             id=1,
             rival="Rival Team",
-            fecha="2024-06-15",
-            lugar="Home",
+            fecha="15/06/2024",
+            lugar="Local",
             puntos_favor=80,
             puntos_contra=75
         )
 
         self.assertEqual(partido["id"], 1)
         self.assertEqual(partido["rival"], "Rival Team")
-        self.assertEqual(partido["fecha"], "2024-06-15")
-        self.assertEqual(partido["lugar"], "Home")
+        self.assertEqual(partido["fecha"], "15/06/2024")
+        self.assertEqual(partido["lugar"], "Local")
         self.assertEqual(partido["puntos_favor"], 80)
         self.assertEqual(partido["puntos_contra"], 75)
 
@@ -43,7 +43,7 @@ class TestPartidos(unittest.TestCase):
                 partido = crear_partido(
                     id=id_partido,
                     rival="Basket Terrassa",
-                    fecha="2026-11-07",
+                    fecha="07/11/2026",
                     lugar="Local",
                     puntos_favor=65,
                     puntos_contra=58
@@ -60,7 +60,7 @@ class TestPartidos(unittest.TestCase):
                     crear_partido(
                         id=id_partido,
                         rival="Basket Terrassa",
-                        fecha="2026-11-07",
+                        fecha="07/11/2026",
                         lugar="Local",
                         puntos_favor=65,
                         puntos_contra=58
@@ -75,7 +75,7 @@ class TestPartidos(unittest.TestCase):
         partido = crear_partido(
             id=2,
             rival="Rival Team",
-            fecha="2026-11-07",
+            fecha="07/11/2026",
             lugar="Local",
             puntos_favor=80,
             puntos_contra=75
@@ -94,7 +94,7 @@ class TestPartidos(unittest.TestCase):
         partido = crear_partido(
             id=1,
             rival="  Basket Terrassa  ",
-            fecha="2026-11-07",
+            fecha="07/11/2026",
             lugar="Local",
             puntos_favor=65,
             puntos_contra=58
@@ -111,7 +111,7 @@ class TestPartidos(unittest.TestCase):
                     crear_partido(
                         id=1,
                         rival=rival,
-                        fecha="2026-11-07",
+                        fecha="07/11/2026",
                         lugar="Local",
                         puntos_favor=65,
                         puntos_contra=58
@@ -121,18 +121,63 @@ class TestPartidos(unittest.TestCase):
     # 4. VALIDACIÓN DE LA FECHA
     # ==========================================
 
-    # Próximas pruebas:
-    # test_crear_partido_fecha_valida()
-    # test_crear_partido_fecha_invalida()
+    def test_crear_partido_fecha_valida(self):
+        partido = crear_partido(
+                    id=1,
+                    rival="Basket Terrassa",
+                    fecha="28/10/2026",
+                    lugar="Local",
+                    puntos_favor=65,
+                    puntos_contra=58
+                )
+
+        self.assertEqual(partido["fecha"], "28/10/2026")
+
+    def test_crear_partido_fecha_invalida(self):
+        fechas_invalidos = ["31/02/2026", "32/10/2026", "28/13/2026", "2026-10-28", "5/1/2026", "", 28102026, None]
+        
+        for fechas in fechas_invalidos:
+            with self.subTest(fechas=fechas):
+                with self.assertRaises(ValueError):
+                    crear_partido(
+                        id=1,
+                        rival="Basket Terrassa",
+                        fecha=fechas,
+                        lugar="Local",
+                        puntos_favor=65,
+                        puntos_contra=58
+                    )
 
     # ==========================================
     # 5. VALIDACIÓN DEL LUGAR
     # ==========================================
 
-    # Próximas pruebas:
-    # test_crear_partido_lugar_valido()
-    # test_crear_partido_lugar_invalido()
+    def test_crear_partido_lugar_valido(self):
+        partido = crear_partido(
+            id=1,
+            rival="Basket Terrassa",
+            fecha="28/10/2026",
+            lugar="local",
+            puntos_favor=65,
+            puntos_contra=58
+        )
 
+        self.assertEqual(partido["lugar"], "Local")
+
+    def test_crear_partido_lugar_invalido(self):
+        lugares_invalidos = ["Neutral", "Casa", "", 123, None]
+
+        for lugar in lugares_invalidos:
+                    with self.subTest(lugar=lugar):
+                        with self.assertRaises(ValueError):
+                            crear_partido(
+                                id=1,
+                                rival="Basket Terrassa",
+                                fecha="15/01/2026",
+                                lugar=lugar,
+                                puntos_favor=65,
+                                puntos_contra=58
+                            )
     # ==========================================
     # 6. VALIDACIÓN DE PUNTUACIONES
     # ==========================================
@@ -151,7 +196,7 @@ class TestPartidos(unittest.TestCase):
         partido = crear_partido(
             id=1,
             rival="Basket Terrassa",
-            fecha="2026-11-07",
+            fecha="07/11/2026",
             lugar="Local",
             puntos_favor=65,
             puntos_contra=58

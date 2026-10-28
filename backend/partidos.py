@@ -1,10 +1,19 @@
 import json
 
-from validaciones import comprobar_rival, comprobar_id_partido
+from config import lugares
+from validaciones import (
+    comprobar_id_partido,
+    comprobar_rival,
+    comprobar_fecha,
+    comprobar_lugar)
 
 def crear_partido(id, rival, fecha, lugar, puntos_favor, puntos_contra):
+   
     id = comprobar_id_partido(id)
     rival = comprobar_rival(rival)
+    fecha = comprobar_fecha(fecha)
+    lugar = comprobar_lugar(lugar, lugares)
+
     partido = {
         "id": id,
         "rival": rival,

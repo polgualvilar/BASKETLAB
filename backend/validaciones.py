@@ -1,4 +1,6 @@
 from consultas import buscar_jugador
+from datetime import datetime
+from config import lugares
 
 
 def solicitar_nombre():
@@ -80,3 +82,38 @@ def comprobar_rival(rival):
         
     return rival.strip()
 
+def comprobar_fecha(fecha):
+    if not isinstance(fecha, str):
+        raise ValueError("La fecha debe ser texto")
+    
+    try:
+        fecha_convertida = datetime.strptime(fecha, "%d/%m/%Y")
+    except ValueError:
+        raise ValueError("La fecha debe ser válida y tener formato exacto DD/MM/AAAA.")
+
+    if fecha_convertida.strftime("%d/%m/%Y") != fecha:
+        raise ValueError("La fecha debe tener el formato exacto DD/MM/AAAA.")
+
+    return fecha
+
+def comprobar_lugar(lugar,lugares):
+
+    if not isinstance(lugar, str):
+        raise ValueError("El lugar debe ser una cadena de texto.")
+    
+    lugar = lugar.strip().capitalize()
+        
+    if lugar not in lugares:
+            raise ValueError("Lugar no válido.")
+
+    return lugar
+
+def comprobar_puntos(puntos):
+
+    if not isinstance(puntos, int) or isinstance(puntos, bool):
+            raise ValueError("Los puntos deben ser un número entero.")
+    
+    if puntos < 0:
+        raise ValueError("Los puntos no pueden ser negativo.")
+
+    return puntos
