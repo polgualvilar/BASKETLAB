@@ -22,3 +22,5 @@ Thumbs.dbcoverage/
 
 # Informes de cobertura
 .coverage
+
+node_modules/
